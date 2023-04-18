@@ -29,8 +29,8 @@ export async function residentsRoutes(app: FastifyInstance) {
       sort: z.string().transform((sort) => {
         const parsedSort = JSON.parse(sort)
         return {
-          column: Object.keys(parsedSort)[0],
-          order: Object.values(parsedSort)[0],
+          column: parsedSort[0],
+          order: parsedSort[1],
         } as RequestSort
       }),
     })
