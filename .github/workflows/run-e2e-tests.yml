@@ -18,7 +18,9 @@ jobs:
       - run: yarn --frozen-lockfile
 
       - run: yarn knex migrate:latest
+        env:
+          DATABASE_URL: "./db/test.db"
+          NODE_ENV: test
+          DATABASE_CLIENT: sqlite
 
       - run: yarn test
-        env:
-          DATABASE_URL: "./db/app.db"
