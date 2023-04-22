@@ -77,7 +77,7 @@ export async function residentsRoutes(app: FastifyInstance) {
       name: z.string(),
       apt: z.number(),
       tower: z.string(),
-      obs: z.string(),
+      obs: z.string().optional(),
     })
 
     const { name, apt, tower, obs } = createResidentBodySchema.parse(
