@@ -8,6 +8,7 @@ declare module 'knex/types/tables' {
       name: string
       apt: number
       tower: string
+      obs: string
       created_at: string
       updated_at: string
     }

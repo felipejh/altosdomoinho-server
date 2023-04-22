@@ -7,6 +7,7 @@ const resident = {
   name: 'John Doe',
   apt: 101,
   tower: 'Toscana',
+  obs: 'Observation',
 }
 
 describe('Residents routes', () => {
@@ -90,12 +91,18 @@ describe('Residents routes', () => {
       .put(`/residents/${residentId}`)
       .send({
         name: 'Edited name',
+        apt: 1,
+        tower: 'tower',
+        obs: 'obs',
       })
       .expect(200)
 
     expect(editResidentResponse.body).toEqual(
       expect.objectContaining({
         name: 'Edited name',
+        apt: 1,
+        tower: 'tower',
+        obs: 'obs',
       }),
     )
   })

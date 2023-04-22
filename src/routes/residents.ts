@@ -42,7 +42,9 @@ export async function residentsRoutes(app: FastifyInstance) {
       .offset(range[0])
       .where((builder) => {
         if (filter.field) {
-          builder.where(filter.field, filter.value)
+          const value = String(filter.value).toLocaleLowerCase()
+
+          builder.where(filter.field, 'like', `%${value}%`)
         }
       })
       .orderBy([sort])
@@ -75,9 +77,12 @@ export async function residentsRoutes(app: FastifyInstance) {
       name: z.string(),
       apt: z.number(),
       tower: z.string(),
+      obs: z.string(),
     })
 
-    const { name, apt, tower } = createResidentBodySchema.parse(request.body)
+    const { name, apt, tower, obs } = createResidentBodySchema.parse(
+      request.body,
+    )
 
     const [resident] = await knex('residents')
       .insert({
@@ -85,6 +90,7 @@ export async function residentsRoutes(app: FastifyInstance) {
         name,
         apt,
         tower,
+        obs,
       })
       .returning('*')
 
@@ -110,10 +116,11 @@ export async function residentsRoutes(app: FastifyInstance) {
       name: z.string().optional(),
       apt: z.number().optional(),
       tower: z.string().optional(),
+      obs: z.string().optional(),
     })
 
     const { id } = editResidentQuerySchema.parse(request.params)
-    const { name, apt, tower } = editResidentBodySchema.parse(request.body)
+    const { name, apt, tower, obs } = editResidentBodySchema.parse(request.body)
 
     const query = knex('residents')
       .where('id', id)
@@ -129,6 +136,10 @@ export async function residentsRoutes(app: FastifyInstance) {
 
     if (tower) {
       query.update('tower', tower)
+    }
+
+    if (obs) {
+      query.update('obs', obs)
     }
 
     const [updatedResident] = await query.returning('*')
