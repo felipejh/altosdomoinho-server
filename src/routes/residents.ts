@@ -2,6 +2,7 @@ import crypto from 'node:crypto'
 import { knex } from '../database'
 import { FastifyInstance } from 'fastify'
 import { z } from 'zod'
+import authMiddleware from '../middlewares/auth'
 
 interface RequestFiler {
   field: string
@@ -16,6 +17,8 @@ interface RequestSort {
 }
 
 export async function residentsRoutes(app: FastifyInstance) {
+  app.addHook('preHandler', authMiddleware)
+
   app.get('/', async (request, response) => {
     const getListParams = z.object({
       filter: z.string().transform((filter) => {
