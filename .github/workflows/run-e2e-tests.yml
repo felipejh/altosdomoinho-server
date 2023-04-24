@@ -22,9 +22,11 @@ jobs:
           DATABASE_URL: "./db/test.db"
           NODE_ENV: test
           DATABASE_CLIENT: sqlite
+          APP_SECRET: appsecret
 
       - run: yarn test
         env:
           DATABASE_URL: "./db/test.db"
           NODE_ENV: test
           DATABASE_CLIENT: sqlite
+          APP_SECRET: appsecret
