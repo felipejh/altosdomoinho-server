@@ -49,6 +49,7 @@ export async function residentsRoutes(app: FastifyInstance) {
       const value = String(filter.value).toLocaleLowerCase()
 
       query = query.where(filter.field, 'LIKE', `%${value}%`)
+      console.log(query)
     }
 
     const residents = await query.select()
