@@ -48,7 +48,7 @@ export async function residentsRoutes(app: FastifyInstance) {
     if (filter.field) {
       const value = String(filter.value).toLocaleLowerCase()
 
-      query = query.whereLike(filter.field, `%${value}%`)
+      query = query.where(filter.field, 'LIKE', `%${value}%`)
     }
 
     const residents = await query.select()
