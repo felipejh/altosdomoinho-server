@@ -50,7 +50,7 @@ export async function residentsRoutes(app: FastifyInstance) {
       //     builder.whereLike(filter.field, `%${value}%`)
       //   }
       // })
-      .whereILike(filter.field, 'vêneto')
+      .whereILike(filter.field, `%${String(filter.value).toLocaleLowerCase()}%`)
       .orderBy([sort])
       .select('*')
 
