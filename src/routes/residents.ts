@@ -43,6 +43,13 @@ export async function residentsRoutes(app: FastifyInstance) {
     const residents = await knex('residents')
       .limit(range[1] - range[0] + 1)
       .offset(range[0])
+      .where((builder) => {
+        if (filter.field) {
+          const value = String(filter.value).toLocaleLowerCase()
+
+          builder.where(filter.field, 'Vêneto')
+        }
+      })
       // .where((builder) => {
       //   if (filter.field) {
       //     const value = String(filter.value).toLocaleLowerCase()
@@ -50,7 +57,10 @@ export async function residentsRoutes(app: FastifyInstance) {
       //     builder.whereLike(filter.field, `%${value}%`)
       //   }
       // })
-      .whereILike(filter.field, `%${String(filter.value).toLocaleLowerCase()}%`)
+      // .whereLike(
+      //   filter.field,
+      //   `%${String(filter.value).toLocaleLowerCase()}%`,
+      // )
       .orderBy([sort])
       .select('*')
 
