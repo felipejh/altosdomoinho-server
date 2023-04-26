@@ -40,17 +40,20 @@ export async function residentsRoutes(app: FastifyInstance) {
 
     const { filter, range, sort } = getListParams.parse(request.query)
 
-    let query = knex('residents')
+    const query = knex('residents')
       .limit(range[1] - range[0] + 1)
       .offset(range[0])
+      .where(filter.field, 'LIKE', `%${'vêneto'}%`)
       .orderBy([sort])
 
-    if (filter.field) {
-      const value = String(filter.value).toLocaleLowerCase()
+    console.log(query)
 
-      query = query.where(filter.field, 'LIKE', `%${value}%`)
-      console.log(query)
-    }
+    // if (filter.field) {
+    //   const value = String(filter.value).toLocaleLowerCase()
+
+    //   query = query.where(filter.field, 'LIKE', `%${value}%`)
+    //   console.log(query)
+    // }
 
     const residents = await query.select()
 
