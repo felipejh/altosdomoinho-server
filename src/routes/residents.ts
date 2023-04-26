@@ -46,9 +46,8 @@ export async function residentsRoutes(app: FastifyInstance) {
       .where((builder) => {
         if (filter.field) {
           const value = String(filter.value).toLocaleLowerCase()
-          console.log(value)
 
-          builder.where(filter.field, 'like', `%${value}%`)
+          builder.whereLike(filter.field, `%${value}%`)
         }
       })
       .orderBy([sort])
