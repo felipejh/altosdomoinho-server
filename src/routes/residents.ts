@@ -43,7 +43,7 @@ export async function residentsRoutes(app: FastifyInstance) {
     const query = knex('residents')
       .limit(range[1] - range[0] + 1)
       .offset(range[0])
-      .where(filter.field, 'LIKE', `%${'vêneto'}%`)
+      .where(filter.field, 'LIKE', `%${'Vêneto'}%`)
       .orderBy([sort])
 
     console.log(query)
