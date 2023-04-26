@@ -40,24 +40,6 @@ export async function residentsRoutes(app: FastifyInstance) {
 
     const { filter, range, sort } = getListParams.parse(request.query)
 
-    // const query = knex('residents')
-    //   .limit(range[1] - range[0] + 1)
-    //   .offset(range[0])
-    //   // .where(filter.field, 'ILIKE', `%${'Vêneto'}%`)
-    //   .whereRaw('LOWER(tower) = ?', 'VÊNETO'.toLocaleLowerCase())
-    //   .orderBy([sort])
-
-    // console.log(query)
-
-    // if (filter.field) {
-    //   const value = String(filter.value).toLocaleLowerCase()
-
-    //   query = query.where(filter.field, 'LIKE', `%${value}%`)
-    //   console.log(query)
-    // }
-
-    // const residents = await query.select()
-
     const residents = await knex('residents')
       .limit(range[1] - range[0] + 1)
       .offset(range[0])
@@ -65,8 +47,7 @@ export async function residentsRoutes(app: FastifyInstance) {
         if (filter.field) {
           const value = String(filter.value).toLocaleLowerCase()
 
-          // builder.whereRaw(filter.field, `%${value}%`)
-          builder.whereRaw(`LOWER(${filter.field}) = ?`, value)
+          builder.whereRaw(`LOWER(${filter.field}) = ?`, `%${value}%`)
         }
       })
       .orderBy([sort])
