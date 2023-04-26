@@ -40,11 +40,12 @@ export async function residentsRoutes(app: FastifyInstance) {
 
     const { filter, range, sort } = getListParams.parse(request.query)
 
-    const query = knex('residents')
-      .limit(range[1] - range[0] + 1)
-      .offset(range[0])
-      // .where(filter.field.toLocaleUpperCase(), 'LIKE', `%${'Vêneto'}%`)
-      .orderBy([sort])
+    // const query = knex('residents')
+    //   .limit(range[1] - range[0] + 1)
+    //   .offset(range[0])
+    //   // .where(filter.field, 'ILIKE', `%${'Vêneto'}%`)
+    //   .whereRaw('LOWER(tower) = ?', 'VÊNETO'.toLocaleLowerCase())
+    //   .orderBy([sort])
 
     // console.log(query)
 
@@ -55,31 +56,21 @@ export async function residentsRoutes(app: FastifyInstance) {
     //   console.log(query)
     // }
 
-    const residents = await query.select()
+    // const residents = await query.select()
 
-    // const residents = await knex('residents')
-    //   .limit(range[1] - range[0] + 1)
-    //   .offset(range[0])
-    //   .where((builder) => {
-    //     if (filter.field) {
-    //       const value = String(filter.value).toLocaleLowerCase()
+    const residents = await knex('residents')
+      .limit(range[1] - range[0] + 1)
+      .offset(range[0])
+      .where((builder) => {
+        if (filter.field) {
+          const value = String(filter.value).toLocaleLowerCase()
 
-    //       builder.where(filter.field, 'Vêneto')
-    //     }
-    //   })
-    // .where((builder) => {
-    //   if (filter.field) {
-    //     const value = String(filter.value).toLocaleLowerCase()
-
-    //     builder.whereLike(filter.field, `%${value}%`)
-    //   }
-    // })
-    // .whereLike(
-    //   filter.field,
-    //   `%${String(filter.value).toLocaleLowerCase()}%`,
-    // )
-    // .orderBy([sort])
-    // .select('*')
+          // builder.whereRaw(filter.field, `%${value}%`)
+          builder.whereRaw(`LOWER(${filter.field}) = ?`, value)
+        }
+      })
+      .orderBy([sort])
+      .select('*')
 
     const [count] = await knex('residents').count()
     const total = Object.values(count)[0]
