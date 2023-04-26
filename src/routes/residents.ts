@@ -40,6 +40,8 @@ export async function residentsRoutes(app: FastifyInstance) {
 
     const { filter, range, sort } = getListParams.parse(request.query)
 
+    console.log(filter)
+
     const residents = await knex('residents')
       .limit(range[1] - range[0] + 1)
       .offset(range[0])
@@ -52,6 +54,8 @@ export async function residentsRoutes(app: FastifyInstance) {
       })
       .orderBy([sort])
       .select('*')
+
+    console.log(residents)
 
     const [count] = await knex('residents').count()
     const total = Object.values(count)[0]
