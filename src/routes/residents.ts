@@ -40,29 +40,42 @@ export async function residentsRoutes(app: FastifyInstance) {
 
     const { filter, range, sort } = getListParams.parse(request.query)
 
-    const residents = await knex('residents')
+    let query = knex('residents')
       .limit(range[1] - range[0] + 1)
       .offset(range[0])
-      .where((builder) => {
-        if (filter.field) {
-          const value = String(filter.value).toLocaleLowerCase()
-
-          builder.where(filter.field, 'Vêneto')
-        }
-      })
-      // .where((builder) => {
-      //   if (filter.field) {
-      //     const value = String(filter.value).toLocaleLowerCase()
-
-      //     builder.whereLike(filter.field, `%${value}%`)
-      //   }
-      // })
-      // .whereLike(
-      //   filter.field,
-      //   `%${String(filter.value).toLocaleLowerCase()}%`,
-      // )
       .orderBy([sort])
-      .select('*')
+
+    if (filter.field) {
+      const value = String(filter.value).toLocaleLowerCase()
+
+      query = query.whereLike(filter.field, `%${value}%`)
+    }
+
+    const residents = await query.select()
+
+    // const residents = await knex('residents')
+    //   .limit(range[1] - range[0] + 1)
+    //   .offset(range[0])
+    //   .where((builder) => {
+    //     if (filter.field) {
+    //       const value = String(filter.value).toLocaleLowerCase()
+
+    //       builder.where(filter.field, 'Vêneto')
+    //     }
+    //   })
+    // .where((builder) => {
+    //   if (filter.field) {
+    //     const value = String(filter.value).toLocaleLowerCase()
+
+    //     builder.whereLike(filter.field, `%${value}%`)
+    //   }
+    // })
+    // .whereLike(
+    //   filter.field,
+    //   `%${String(filter.value).toLocaleLowerCase()}%`,
+    // )
+    // .orderBy([sort])
+    // .select('*')
 
     const [count] = await knex('residents').count()
     const total = Object.values(count)[0]
