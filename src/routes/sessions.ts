@@ -16,6 +16,9 @@ export async function sessionsRoutes(app: FastifyInstance) {
 
     const [user] = await knex('users').select('*').where('email', email)
 
+    if (!user) {
+      return response.status(403).send('E-mail/password does not match')
+    }
     const passwordHash = await bcrypt.compare(password, user.password_hash)
 
     if (!passwordHash) {
