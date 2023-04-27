@@ -81,11 +81,12 @@ export async function residentsRoutes(app: FastifyInstance) {
       apt: z.number(),
       tower: z.string(),
       obs: z.string().optional(),
+      vehicle_model: z.string().optional(),
+      vehicle_license_plate: z.string().optional(),
     })
 
-    const { name, apt, tower, obs } = createResidentBodySchema.parse(
-      request.body,
-    )
+    const { name, apt, tower, obs, vehicle_model, vehicle_license_plate } =
+      createResidentBodySchema.parse(request.body)
 
     const [resident] = await knex('residents')
       .insert({
@@ -94,6 +95,8 @@ export async function residentsRoutes(app: FastifyInstance) {
         apt,
         tower,
         obs,
+        vehicle_model,
+        vehicle_license_plate,
       })
       .returning('*')
 
@@ -120,10 +123,13 @@ export async function residentsRoutes(app: FastifyInstance) {
       apt: z.number().optional(),
       tower: z.string().optional(),
       obs: z.string().optional(),
+      vehicle_model: z.string().optional().nullable(),
+      vehicle_license_plate: z.string().optional().nullable(),
     })
 
     const { id } = editResidentQuerySchema.parse(request.params)
-    const { name, apt, tower, obs } = editResidentBodySchema.parse(request.body)
+    const { name, apt, tower, obs, vehicle_model, vehicle_license_plate } =
+      editResidentBodySchema.parse(request.body)
 
     const query = knex('residents')
       .where('id', id)
@@ -143,6 +149,15 @@ export async function residentsRoutes(app: FastifyInstance) {
 
     if (obs) {
       query.update('obs', obs)
+    }
+
+    if (vehicle_model) {
+      query.update('vehicle_model', vehicle_model)
+    }
+
+    if (vehicle_license_plate) {
+      console.log(vehicle_license_plate)
+      query.update('vehicle_license_plate', vehicle_license_plate)
     }
 
     const [updatedResident] = await query.returning('*')
