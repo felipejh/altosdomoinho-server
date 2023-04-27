@@ -16,7 +16,7 @@ const signInCredentials = {
 
 const resident = {
   name: 'John Doe',
-  apt: 101,
+  apt: '101',
   tower: 'Toscana',
   obs: 'Observation',
 }
@@ -145,7 +145,7 @@ describe('Residents routes', () => {
       .set('Authorization', `Bearer ${responseSignIn.body.token}`)
       .send({
         name: 'Edited name',
-        apt: 1,
+        apt: '1',
         tower: 'tower',
         obs: 'obs',
       })
@@ -154,7 +154,7 @@ describe('Residents routes', () => {
     expect(editResidentResponse.body).toEqual(
       expect.objectContaining({
         name: 'Edited name',
-        apt: 1,
+        apt: '1',
         tower: 'tower',
         obs: 'obs',
       }),
