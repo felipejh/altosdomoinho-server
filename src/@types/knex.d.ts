@@ -17,6 +17,7 @@ declare module 'knex/types/tables' {
       apt: string
       tower: string
       obs: string | undefined
+      phone_number: string | undefined
       vehicle_model: string | undefined
       vehicle_license_plate: string | undefined
       created_at: string
