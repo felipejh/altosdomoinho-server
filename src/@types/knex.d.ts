@@ -14,7 +14,7 @@ declare module 'knex/types/tables' {
     residents: {
       id: string
       name: string
-      apt: number
+      apt: string
       tower: string
       obs: string | undefined
       vehicle_model: string | undefined

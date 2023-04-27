@@ -78,7 +78,7 @@ export async function residentsRoutes(app: FastifyInstance) {
   app.post('/', async (request, response) => {
     const createResidentBodySchema = z.object({
       name: z.string(),
-      apt: z.number(),
+      apt: z.string(),
       tower: z.string(),
       obs: z.string().optional(),
       vehicle_model: z.string().optional(),
@@ -120,7 +120,7 @@ export async function residentsRoutes(app: FastifyInstance) {
 
     const editResidentBodySchema = z.object({
       name: z.string().optional(),
-      apt: z.number().optional(),
+      apt: z.string().optional(),
       tower: z.string().optional(),
       obs: z.string().optional().nullable(),
       vehicle_model: z.string().optional().nullable(),
