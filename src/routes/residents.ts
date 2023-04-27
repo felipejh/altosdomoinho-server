@@ -122,7 +122,7 @@ export async function residentsRoutes(app: FastifyInstance) {
       name: z.string().optional(),
       apt: z.number().optional(),
       tower: z.string().optional(),
-      obs: z.string().optional(),
+      obs: z.string().optional().nullable(),
       vehicle_model: z.string().optional().nullable(),
       vehicle_license_plate: z.string().optional().nullable(),
     })
