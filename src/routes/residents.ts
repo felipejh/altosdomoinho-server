@@ -4,10 +4,10 @@ import { FastifyInstance } from 'fastify'
 import { z } from 'zod'
 import authMiddleware from '../middlewares/auth'
 
-interface RequestFiler {
+type RequestFiler = Array<{
   field: string
   value: string
-}
+}>
 
 type RequestRange = Array<number>
 
@@ -23,10 +23,14 @@ export async function residentsRoutes(app: FastifyInstance) {
     const getListParams = z.object({
       filter: z.string().transform((filter) => {
         const parsedFilter = JSON.parse(filter)
-        return {
-          field: Object.keys(parsedFilter)[0],
-          value: Object.values(parsedFilter)[0],
-        } as RequestFiler
+        const filters: RequestFiler = Object.keys(parsedFilter).map(
+          (field) => ({
+            field,
+            value: parsedFilter[field],
+          }),
+        )
+
+        return filters
       }),
       range: z.string().transform((range) => JSON.parse(range) as RequestRange),
       sort: z.string().transform((sort) => {
@@ -38,16 +42,18 @@ export async function residentsRoutes(app: FastifyInstance) {
       }),
     })
 
-    const { filter, range, sort } = getListParams.parse(request.query)
+    const { filter: filters, range, sort } = getListParams.parse(request.query)
 
     const residents = await knex('residents')
       .limit(range[1] - range[0] + 1)
       .offset(range[0])
       .where((builder) => {
-        if (filter.field) {
-          const value = String(filter.value).toLocaleLowerCase()
+        if (filters.length) {
+          filters.forEach((filter) => {
+            const value = String(filter.value).toLocaleLowerCase()
 
-          builder.whereRaw(`LOWER(${filter.field}) LIKE ?`, `%${value}%`)
+            builder.whereRaw(`LOWER(${filter.field}) LIKE ?`, `%${value}%`)
+          })
         }
       })
       .orderBy([sort])
